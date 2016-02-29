@@ -39,15 +39,39 @@ angular.module('con4', [])
 				return;
 			}
 			
+			//Find the southMost unoccupied row
+			/**
+			 * Always start at row 0 and then increment
+			 * until you have reached the final row or 
+			 * found a cell that already has a token
+			 */
+			
 			var row = checkSouth(0, col);
+			/**
+			 * Once the row is identified
+			 * set the cell by accessing 
+			 * $scope.grid[row][col]
+			 * set cell.hasToken = true
+			 * set cell.color $scope.activePlayer
+			 **/  
 			var cell = $scope.grid[row][col]; 
 			cell.hasToken = true;
 			cell.color = $scope.activePlayer;
 			
+			//endTurn and checkVictory
 			endTurn();
 			checkVictory(cell);
 		}
 		
+		/**
+		 * Let's use recursion
+		 * A recursive function is...
+		 * a function that calls itself
+		 * until some condition is met
+		 * 
+		 * Check South will need essentially two base cases
+		 * 
+		 */
 		function checkSouth(row, col){
 			//Base case 1 found south Token return row - 1 to go back one step
 			if($scope.grid[row][col].hasToken){
