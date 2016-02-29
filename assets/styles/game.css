@@ -1,0 +1,16 @@
+.cell{
+	display: inline-block;
+	background-color: blue;
+	border: 1px solid black;
+	height: 80px;
+	width: 80px;
+	text-align: center;
+	padding-top: 6px;
+}
+
+.token{
+	border-radius: 100px;
+	display: inline-block;
+	height: 65px;
+	width: 65px;
+}
