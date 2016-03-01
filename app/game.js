@@ -3,11 +3,17 @@ angular.module('con4', [])
         $scope.grid = [];
         $scope.startup = true
 // Start Game 
-        $scope.newGame = function () {
+        $scope.playAgain = function () {
             $scope.victory = false
             $scope.currentplayer = ""
             $scope.activePlayer = $scope.player1Color
             $scope.grid = buildGrid();
+        }
+// End start game
+// Start Game 
+        $scope.newGame = function () {
+            $scope.startup = true
+                     
         }
 // End start game
 // build grid

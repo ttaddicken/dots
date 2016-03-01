@@ -8,19 +8,27 @@
 <body ng-controller="GameController" class="container">
     
     <!--start of start up info-->
-    <div>
-        <input ng-model="player1" type="text" placeholder="Enter Player 1 name">
-            <input ng-model="player1Color" type="color" placeholder="Enter player1 color">
-        <input ng-model="player2" type="text"placeholder="Enter Player 2 name">
-            <input ng-model="player2Color" type="color" placeholder="Enter player2 color">
+    <div ng-show="startup">
+        <label>Player1 name:</label>
+        <input class="input" ng-model="player1" type="text">
+           <label>Select color:</label>
+            <input ng-model="player1Color" type="color" value="#ff0000">
+       <label>Player2 name:</label>
+        <input class="input" ng-model="player2" type="text">
+            <label>Select color:</label>
+            <input ng-model="player2Color" type="color">
             <label for="">Select background color</label>
-            <input ng-model="background" type="color">
+            <input ng-model="background" type="color" value="#2d23dc">
+            <button class="pull-right" ng-click="playAgain()">Start Game</button>
     </div>
 	<!--end of start up-->
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<button class="pull-right" ng-click="newGame()">Start Game</button>
-			<h3 style="text-align: center">It's {{currentplayer}}'s turn</h3>
+            <div ng-show="!startup">
+			<button class="pull-right" ng-click="playAgain()">Play Again?</button>
+            <button class="pull-right" ng-click="newGame()">Change Players</button>
+            </div>
+			<h3 style="text-align: center">It's {{currentplayer}}'s  turn</h3>
 		</div>
 		<div class="panel-body text-center">
 			<div class="board">
