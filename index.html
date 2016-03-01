@@ -24,10 +24,12 @@
 	<!--end of start up-->
 	<div class="panel panel-default">
 		<div class="panel-heading">
+            <!--start hide-->
             <div ng-show="!startup">
 			<button class="pull-right" ng-click="playAgain()">Play Again?</button>
             <button class="pull-right" ng-click="newGame()">Change Players</button>
             </div>
+            <!--end hide-->
 			<h3 style="text-align: center">It's {{currentplayer}}'s  turn</h3>
 		</div>
 		<div class="panel-body text-center">
