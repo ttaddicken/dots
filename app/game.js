@@ -100,7 +100,7 @@ angular.module('con4', [])
             if (verticalMatches >= 3 || horizontalMatches >= 3 || diagLeft >= 3 || diagRight >= 3) {
                 //You can do better than an alert 
                 $scope.victory = true
-                alert(cell.color + ' Wins');
+                alert($scope.currentplayer + ' Wins');
             }
         }
 // This function checks the cells around the token cell
