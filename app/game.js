@@ -1,9 +1,10 @@
 angular.module('con4', [])
     .controller('GameController', function ($scope) {
         $scope.grid = [];
+        $scope.background = "teal"
         $scope.newGame = function () {
             $scope.victory = false
-            $scope.activePlayer = "red"
+            $scope.activePlayer = $scope.player1Color
             $scope.grid = buildGrid();
         }
 
@@ -202,10 +203,10 @@ angular.module('con4', [])
 
         function endTurn() {
 
-            if ($scope.activePlayer === "red") {
-                $scope.activePlayer = "black"
+            if ($scope.activePlayer === $scope.player1Color) {
+                $scope.activePlayer = $scope.player2Color
             } else {
-                $scope.activePlayer = "red"
+                $scope.activePlayer = $scope.player1Color
             }
         }
     });
