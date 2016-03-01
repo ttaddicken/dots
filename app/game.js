@@ -1,163 +1,151 @@
 angular.module('con4', [])
-	.controller('GameController', function($scope){
-		
-		$scope.newGame = function(){
-			/**
-			 * set victory to false
-			 * $scope.grid = buildGrid();
-			 * This is connect 4 so red plays first
-			 */
-			$scope.victory = false;
-			$scope.grid = buildGrid();
-			$scope.activePlayer = 'red';
-		}
-		
-		function buildGrid(){
-			//Build a 6x7 grid object and return it from this function
-			var grid = []; 
-			//Each cell of the grid is an object that knows its coords
-			/**
-			 * Cell Schema
-			 * {
-			 * 		row: number,
-			 * 		col: number
-			 * }
-			 */
-			for(var row = 0; row < 6; row++){
-				grid[row] = [];
-				for(var col = 0; col < 7; col++){
-					grid[row][col] = {row: row, col: col};
-				}
-			}
-			return grid;
-		}
-		
-		$scope.dropToken = function(col){
-			//Column is full no space available
-			//Bad Drop
-			if($scope.grid[0][col].hasToken){
-				return;
-			}
-			
-			//Find the southMost unoccupied row
+    .controller('GameController', function ($scope) {
+        $scope.grid = [];
+        $scope.startup = true
+// Start Game 
+        $scope.playAgain = function () {
+            $scope.victory = false
+            $scope.currentplayer = ""
+            $scope.activePlayer = $scope.player1Color
+            $scope.grid = buildGrid();
+        }
+// End start game
+// Start Game 
+        $scope.newGame = function () {
+            $scope.startup = true
+                     
+        }
+// End start game
+// build grid
+        function buildGrid() {
+            $scope.startup = false
+            $scope.grid = []
+            for (var i = 0; i < 6; i++) {
+                var row = i
+                $scope.grid[row] = [];
+                for (var j = 0; j < 7; j++) {
+                    var column = j
+                    $scope.grid[row].push({ row: row, col: column })
+                }
+            }
+            console.log($scope.grid);
+            return $scope.grid
+        }
+// end build grid
+        //  this is being passed from the UI "dropToken(cell.col)"
+// this function is for dropping the game token
+        $scope.dropToken = function (col) {
+            if ($scope.victory) { return }
+            debugger;
+            console.log(col)
+            //The col is passed in from the view
+            //columnn is full no space available
+            //Bad Drop
+            if ($scope.grid[0][col].hasToken) {
+                return;
+            }
+            //Find the southMost unoccupied row
 			/**
 			 * Always start at row 0 and then increment
 			 * until you have reached the final row or 
 			 * found a cell that already has a token
 			 */
-			
-			var row = checkSouth(0, col);
-			/**
-			 * Once the row is identified
-			 * set the cell by accessing 
-			 * $scope.grid[row][col]
-			 * set cell.hasToken = true
-			 * set cell.color $scope.activePlayer
-			 **/  
-			var cell = $scope.grid[row][col]; 
-			cell.hasToken = true;
-			cell.color = $scope.activePlayer;
-			
-			//endTurn and checkVictory
-			endTurn();
+            var row = checkSouth(0, col);
+
+            var cell = $scope.grid[row][col];
+            cell.hasToken = true;
+            cell.color = $scope.activePlayer
 			checkVictory(cell);
+            endTurn();
+            //endTurn and checkVictory
+        }
+// This function checks for available slots
+        function checkSouth(row, col) {
+            debugger
+           
+            //Base case 1 found south Token return row - 1 to go back one step
+            if ($scope.grid[row][col].hasToken) {
+                row--
+                return row
+            }
+			
+            //base case 2 reached bottom of grid return row or 5
+            if (row >= 5) {
+                return row;
+            }
+            row++
+            return checkSouth(row, col)          
 		}
-		
-		/**
-		 * Let's use recursion
-		 * A recursive function is...
-		 * a function that calls itself
-		 * until some condition is met
-		 * 
-		 * Check South will need essentially two base cases
-		 * 
-		 */
-		function checkSouth(row, col){
-			//Base case 1 found south Token return row - 1 to go back one step
-			if($scope.grid[row][col].hasToken){
-				return row - 1;
-			}
-			//base case 2 reached bottom of grid
-			if(row >= 5){
-				return row;
-			}
-			row++;
-			return checkSouth(row, col);
-		}
-		
-		function checkVictory(cell){
-			var horizontalMatches = 0;
-			//Check Horizontal
-			horizontalMatches += checkNextCell(cell, 0, 'left');
-			horizontalMatches += checkNextCell(cell, 0, 'right');
+// this function calls victory
+        function checkVictory(cell) {
+            var horizontalMatches = 0;
+            //Check Horizontal
+            horizontalMatches += checkNextCell(cell, 0, 'left');
+            horizontalMatches += checkNextCell(cell, 0, 'right');
 			
-			//Check Vertical
-			var verticalMatches = 0;
-			verticalMatches += checkNextCell(cell, 0, 'bottom');
+            //Check Vertical
+            var verticalMatches = 0;
+            verticalMatches += checkNextCell(cell, 0, 'bottom');
 			
-			//Check Diag LeftUp and RightDown
-			var diagLeft = 0;
-			diagLeft += checkNextCell(cell, 0, 'diagUpLeft');
-			diagLeft += checkNextCell(cell, 0, 'diagBotRight');
+            //Check DiagLeftUp and RightDown
+            var diagLeft = 0;
+            diagLeft += checkNextCell(cell, 0, 'diagUpLeft');
+            diagLeft += checkNextCell(cell, 0, 'diagBotRight');
 			
-			//Check Diag RigthUp and LeftDown
-			var diagRight = 0;
-			diagRight += checkNextCell(cell, 0, 'diagUpRight');
-			diagRight += checkNextCell(cell, 0, 'diagBotLeft');
-			
-			if(verticalMatches >= 3 || horizontalMatches >= 3 || diagLeft >= 3 || diagRight >= 3){
-				alert(cell.color + ' Wins');
-			}
-			
-		}
-		
-		function getNextCell(cell, direction){
-			/**
-			 * var nextRow = cell.row;
-			 * var nextCol = cell.col;
-			 * 
-			 * adjust the values of nextRow
-			 * and nextCol as needed based upon
-			 * the direction of travel.
-			 * 
-			 * if nextRow > 0 or < 5 
-			 * or if nextCol > 6 
-			 * return null;
-			 * 
-			 * otherwise 
-			 * return $scope.grid[nextRow][nextCol];
-			 */
-			var nextRow = cell.row;
-			var nextCol = cell.col;
-			
-			if(direction === 'bottom'){
-				nextRow++;
-			} else if(direction === 'left'){
-				nextCol--;
-			} else if(direction === 'right'){
-				nextCol++;
-			} else if(direction === 'diagUpLeft'){
-				nextCol--;
-				nextRow--;
-			} else if(direction === 'diagBotRight'){
-				nextCol++;
-				nextRow++;
-			} else if(direction === 'diagUpRight'){
-				nextCol--;
-				nextRow++;
-			} else if(direction === 'diagBotLeft'){
-				nextCol++;
-				nextRow--;
-			}
-			
-			if(nextRow < 0 || nextRow > 5 || nextCol > 6){
-				return;
-			}
-			
-			return $scope.grid[nextRow][nextCol];
-		}
-		
-		function checkNextCell(cell, matches, direction){
+            //Check DiagRigthUp and LeftDown
+            var diagRight = 0;
+            diagRight += checkNextCell(cell, 0, 'diagUpRight');
+            diagRight += checkNextCell(cell, 0, 'diagBotLeft');
+
+            if (verticalMatches >= 3 || horizontalMatches >= 3 || diagLeft >= 3 || diagRight >= 3) {
+                //You can do better than an alert 
+                $scope.victory = true
+                alert(cell.color + ' Wins');
+            }
+        }
+// This function checks the cells around the token cell
+        function getNextCell(cell, direction) {
+            var nextRow = cell.row;
+            var nextCol = cell.col;
+
+            console.log('get next cell function');
+            console.log(cell);
+            console.log(nextRow, nextCol);
+            switch (direction) {
+                case 'left':
+                    nextCol--;
+                    break;
+                case 'right':
+                    nextCol++;
+                    break;
+                case 'bottom':
+                    nextRow++;
+                    break;
+                case 'diagUpLeft':
+                    nextRow--;
+                    nextCol--;
+                    break;
+                case 'diagUpRight':
+                    nextRow--;
+                    nextCol++;
+                    break;
+                case 'diagBotLeft':
+                    nextRow++;
+                    nextCol--;
+                    break;
+                case 'diagBotRight':
+                    nextRow++;
+                    nextCol++;
+                    break;
+            }
+            if (nextRow < 0 || nextRow > 5 || nextCol > 6) {
+                console.log('returning null');
+                return null;
+            } else return $scope.grid[nextRow][nextCol];
+
+        }
+
+        function checkNextCell(cell, matches, direction) {
 			/**
 			 * var nextCell = getNextCell(cell, direction)
 			 * check if nextCell is defined 
@@ -168,25 +156,24 @@ angular.module('con4', [])
 			 * 
 			 * otherwise return matches
 			 */
-			var nextCell = getNextCell(cell, direction);
-			if(nextCell && nextCell.hasToken && nextCell.color === cell.color){
-				matches++;
-				return checkNextCell(nextCell, matches, direction);
-			}
-			return matches;
-		}
-		
-		function endTurn(){
-			/**
-			 * End Turn simply switch 
-			 * $scope.activePlayer from 
-			 * 'red' to 'yellow' 
-			 * and 'yellow' to 'red'
-			 */
-			if($scope.activePlayer === 'red'){
-				$scope.activePlayer = 'yellow';
-			} else {
-				$scope.activePlayer = 'red';
-			}
-		}
-	});
+
+            var nextCell = getNextCell(cell, direction)
+            if (nextCell && nextCell.hasToken && nextCell.color === cell.color) {
+                matches++
+                return checkNextCell(nextCell, matches, direction)
+            } else {
+                return matches
+            }
+        }
+
+        function endTurn() {
+debugger;
+            if ($scope.activePlayer === $scope.player1Color) {
+                $scope.activePlayer = $scope.player2Color;
+                $scope.currentplayer = $scope.player2
+            } else {
+                $scope.activePlayer = $scope.player1Color;
+                $scope.currentplayer = $scope.player1
+            }
+        }
+    });

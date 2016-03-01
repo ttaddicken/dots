@@ -6,16 +6,34 @@
 	<link rel="stylesheet" href="assets/styles/game.css">
 </head>
 <body ng-controller="GameController" class="container">
-	
+    
+    <!--start of start up info-->
+    <div ng-show="startup">
+        <label>Player1 name:</label>
+        <input class="input" ng-model="player1" type="text">
+           <label>Select color:</label>
+            <input ng-model="player1Color" type="color" value="#ff0000">
+       <label>Player2 name:</label>
+        <input class="input" ng-model="player2" type="text">
+            <label>Select color:</label>
+            <input ng-model="player2Color" type="color">
+            <label for="">Select background color</label>
+            <input ng-model="background" type="color" value="#2d23dc">
+            <button class="pull-right" ng-click="playAgain()">Start Game</button>
+    </div>
+	<!--end of start up-->
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<button class="pull-right" ng-click="newGame()">Start Game</button>
-			<h3>Connect 4</h3>
+            <div ng-show="!startup">
+			<button class="pull-right" ng-click="playAgain()">Play Again?</button>
+            <button class="pull-right" ng-click="newGame()">Change Players</button>
+            </div>
+			<h3 style="text-align: center">It's {{currentplayer}}'s  turn</h3>
 		</div>
 		<div class="panel-body text-center">
 			<div class="board">
 				<div class="row" ng-repeat="row in grid">
-					<div class="cell" ng-repeat="cell in row" ng-click="dropToken(cell.col)">
+					<div class="cell" style="background-color:{{background}}" ng-repeat="cell in row" ng-click="dropToken(cell.col)">
 						<div class="token" ng-style="{'background-color': cell.hasToken ? cell.color : '#fff'}"></div>
 					</div>
 				</div>
@@ -24,8 +42,14 @@
 	</div>
 	
 	
+<<<<<<< HEAD
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+=======
+	<!--Load angular-->
+    <script src="bower_components/angular/angular.js"></script>
+>>>>>>> refs/remotes/origin/master
 	
+    <!--Load app-->
 	<script src="app/game.js"></script>
 	
 </body>
