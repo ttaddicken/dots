@@ -2,7 +2,7 @@ angular.module('con4', [])
     .controller('GameController', function ($scope) {
         $scope.grid = [];
         $scope.startup = true
-// Start Game 
+        // Start Game 
         $scope.playAgain = function () {
             $scope.victory = false
             $scope.currentplayer = ""
