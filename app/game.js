@@ -1,6 +1,8 @@
 angular.module('con4', [])
     .controller('GameController', function ($scope) {
+       setTimeout(function () {
         $scope.grid = [];
+        $scope.local = true;
         $scope.startup = true
         // Start Game 
         $scope.playAgain = function () {
@@ -176,4 +178,7 @@ debugger;
                 $scope.currentplayer = $scope.player1
             }
         }
+               
+            
+            }, 000) 
     });
